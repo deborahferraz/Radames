@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRUD Esmalte</title>
+</head>
+
+<body>
+
+    <h1>Cadastro de Esmaltes</h1>
+
+    <label for="inputId">Id:</label>
+    <input type="number" name="inputId" id="inputId">
+    <input type="button" value="Procure" id="btProcure" onclick="procure()" style="display:inline;">
+    <input type="button" value="Inserir" id="btInserir" onclick="inserir()" style="display:none;">
+    <input type="button" value="Alterar" id="btAlterar" onclick="alterar()" style="display:none;">
+    <input type="button" value="Excluir" id="btExcluir" onclick="excluir()" style="display:none;">
+    <br><br>
+    <label for="inputMarca">Marca:</label>
+    <input type="text" name="inputMarca" id="inputMarca">
+    <label for="input-palavra">Digite uma palavra para buscar:</label>
+    <input type="text" id="input-palavra" placeholder="Digite a palavra" />
+    <button onclick="executarBusca()">Buscar</button>
+    <br>
+    
+    <label for="inputNome">Nome:</label>
+    <input type="text" name="inputNome" id="inputNome">
+    <br>
+    
+    <label for="inputCor">Cor:</label>
+    <input type="text" name="inputCor" id="inputCor">
+    <br>
+    
+    <label for="inputTipodeEsmalte">Tipo:</label>
+    <select name="inputTipodeEsmalte" id="inputTipodeEsmalte">
+        <option value="">Escolha o tipo</option>
+        <option value="Esmalte Cremoso">Esmalte Cremoso</option>
+        <option value="Esmalte Metálico">Esmalte Metálico</option>
+        <option value="Esmalte Glitter">Esmalte Glitter</option>
+        <option value="Esmalte Fosco">Esmalte Fosco</option>
+        <option value="Esmalte Perolado">Esmalte Perolado</option>
+        <option value="Esmalte Holográfico">Esmalte Holográfico</option>
+        <option value="Esmalte Neon">Esmalte Neon</option>
+    </select>
+    <br>
+    <br>
+    
+    <label for="inputDataValidade">Data de Validade:</label>
+    <input type="date" name="inputDataValidade" id="inputDataValidade">
+    <br>
+
+    <label for="inputQuantasVezesUsado">Quantas vezes usado:</label>
+    <input type="number" name="inputQuantasVezesUsado" id="inputQuantasVezesUsado">
+   
+    <br><br>
+    <div id="divAviso" style="background-color: rgb(247, 215, 250);"></div>
+    <br>
+    <input type="button" value="Salvar" id="btSalvar" onclick="salvar()" style="display:none;">
+    <input type="button" value="Cancelar" id="btCancelar" onclick="cancelarOperacao()" style="display:none;">
+    <br><br>
+    <!-- <input type="button" value="Listar" onclick="listar()">
+    <br><br> -->
+
+    <div id="outputSaida" style="background-color: aqua;">...</div>
+    
+    <script src="./Esmalte.js"></script>
+    <script src="./EsmalteControle.js"></script>
+</body>
+
+</html>
