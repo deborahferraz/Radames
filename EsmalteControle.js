@@ -9,6 +9,93 @@ document.getElementById("inputId").addEventListener("focus", function () {
     mostrarAviso("Digite o Id e clic no botão procure");
 });
 
+
+function dadosIniciais() {
+    listaMusica.push(new Musica('0', 'Rein raus', 'Rammstein', 'Mutter', '2001-02-04', 'Industrial Metal'));
+
+    listar();
+}
+
+
+function salvarNoComputador() {
+    nomeParaSalvar = "./Esmalte.csv";
+    let textoCSV = "";
+    for (let i = 0; i < listaEsmaltes.length; i++) {
+        const linha = listaEsmaltes[i];
+        textoCSV += linha.id + ";" +
+            linha.marca + ";" +
+            linha.nome + ";" +
+            linha.cor + ";" +
+            linha.tipoDeEsmalte + ";" +
+            linha.dataValidade + ";" +
+            linha.quantasVezesUsado + "\n";
+    }
+
+    salvarEmArquivo(nomeParaSalvar, textoCSV);
+}
+
+
+function salvarEmArquivo(nomeArq, conteudo) {
+    // Cria um blob com o conteúdo em formato de texto
+    const blob = new Blob([conteudo], { type: 'text/plain' });
+    // Cria um link temporário para o download
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = nomeArq; // Nome do arquivo de download
+    // Simula o clique no link para iniciar o download
+    link.click();
+    // Libera o objeto URL
+    URL.revokeObjectURL(link.href);
+}
+
+
+// Função para abrir o seletor de arquivos para upload
+function buscarDadosSalvosNoComputador() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.csv'; // Aceita apenas arquivos CSV
+    input.onchange = function (event) {
+        const arquivo = event.target.files[0];
+        console.log(arquivo.name);
+        if (arquivo) {
+            processarArquivo(arquivo);
+        }
+    };
+    input.click(); // Simula o clique para abrir o seletor de arquivos
+
+}
+
+// Função para processar o arquivo CSV e transferir os dados para a listaEsmaltes
+function processarArquivo(arquivo) {
+    const leitor = new FileReader();
+    leitor.onload = function (e) {
+        const conteudo = e.target.result; // Conteúdo do arquivo CSV
+        const linhas = conteudo.split('\n'); // Separa o conteúdo por linha
+        listaEsmaltes = []; // Limpa a lista atual (se necessário)
+        for (let i = 0; i < linhas.length; i++) {
+            const linha = linhas[i].trim();
+            if (linha) {
+                const dados = linha.split(';'); // Separa os dados por ';'
+                if (dados.length === 7) {
+                    // Adiciona os dados à listaEsmaltes como um objeto
+                    listaMusica.push({
+                        id: dados[0],
+                        marca: dados[1],
+                        nome: dados[2],
+                        cor: dados[3],
+                        tipoDeEsmalte: dados[4],
+                        dataValidade: dados[5],
+                        quantasVezesUsado: dados[6]
+                    });
+                }
+            }
+        }
+        // console.log("Upload concluído!", listaEsmaltes); // Exibe no console a lista atualizada
+        listar();
+    };
+    leitor.readAsText(arquivo); // Lê o arquivo como texto
+}
+
 //backend (não interage com o html)
 function procurePorChavePrimaria(chave) {
     for (let i = 0; i < listaEsmaltes.length; i++) {
