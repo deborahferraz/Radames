@@ -20,9 +20,6 @@
     <br><br>
     <label for="inputMarca">Marca:</label>
     <input type="text" name="inputMarca" id="inputMarca">
-    <label for="input-palavra">Digite uma palavra para buscar:</label>
-    <input type="text" id="input-palavra" placeholder="Digite a palavra" />
-    <button onclick="executarBusca()">Buscar</button>
     <br>
     
     <label for="inputNome">Nome:</label>
@@ -64,9 +61,14 @@
     <br><br> -->
 
     <div id="outputSaida" style="background-color: aqua;">...</div>
+
+    <input type="button" value="Salvar os dados no computador" onclick="prepararESalvarCSV()">
+    <input type="button" value="Buscar os dados salvos" onclick="abrirArquivoSalvoEmLocalPermanente()">
+    </div>
     
     <script src="./Esmalte.js"></script>
     <script src="./EsmalteControle.js"></script>
 </body>
 
 </html>
+
