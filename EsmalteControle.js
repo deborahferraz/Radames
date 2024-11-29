@@ -9,20 +9,19 @@ document.getElementById("inputId").addEventListener("focus", function () {
     mostrarAviso("Digite o Id e clic no botão procure");
 });
 
-
-function dadosIniciais() {
-    listaMusica.push(new Musica('0', 'Rein raus', 'Rammstein', 'Mutter', '2001-02-04', 'Industrial Metal'));
-
+function dadosIniciais() { //dados iniciais da lista
+    listaEsmaltes.push(new Esmalte('0', 'Risque', 'Maça do amor', 'Vermelho', 'Metálico', '11-12-2027', '9'));
+    
     listar();
 }
 
 
-function salvarNoComputador() {
-    nomeParaSalvar = "./Esmalte.csv";
+function prepararESalvarCSV() { //gera um arquivo csv com as informações de listaEsmaltes vai enviar da memória RAM para dispositivo de armazenamento permanente.
+   let nomeDoArquivoDestino = "./Esmalte.csv";  //define o nome do arquivo csv
     let textoCSV = "";
     for (let i = 0; i < listaEsmaltes.length; i++) {
-        const linha = listaEsmaltes[i];
-        textoCSV += linha.id + ";" +
+        const linha = listaEsmaltes[i]; //variavel linha contem as informações de cada musica
+        textoCSV += linha.Id + ";" + //concatena os dados das musicas formatados para linha csv (separada por ;)
             linha.marca + ";" +
             linha.nome + ";" +
             linha.cor + ";" +
@@ -30,71 +29,81 @@ function salvarNoComputador() {
             linha.dataValidade + ";" +
             linha.quantasVezesUsado + "\n";
     }
-
-    salvarEmArquivo(nomeParaSalvar, textoCSV);
+    persistirEmLocalPermanente(nomeDoArquivoDestino, textoCSV);
 }
 
 
-function salvarEmArquivo(nomeArq, conteudo) {
-    // Cria um blob com o conteúdo em formato de texto
+function persistirEmLocalPermanente(nomeArq, conteudo) {
+    /*cria um blob (objeto que representa dados de arquivo) que armazena "[conteudo]" como arquivo de texto,
+    criando um arquivo temporário*/
     const blob = new Blob([conteudo], { type: 'text/plain' });
-    // Cria um link temporário para o download
-    const link = document.createElement('a');
+    //cria o elemento "a" (link temporário) usado para adicionar o dowload do arquivo
+    const link = document.createElement('a'); /*cria uma URL temporária que aponta para o blob e
+    atribui ela ao href do link para que ele "aponte" para o arquivo gerado (permitindo seu download)*/
     link.href = URL.createObjectURL(blob);
     link.download = nomeArq; // Nome do arquivo de download
-    // Simula o clique no link para iniciar o download
-    link.click();
+    link.click(); //inicia o processo de dowload automaticamente
     // Libera o objeto URL
-    URL.revokeObjectURL(link.href);
+    URL.revokeObjectURL(link.href); //remove a URL temporária que foi criada (liberando a memória)
 }
 
 
-// Função para abrir o seletor de arquivos para upload
-function buscarDadosSalvosNoComputador() {
+// Função para abrir o seletor de arquivos para upload (para processar o arquivo selecionado)
+function abrirArquivoSalvoEmLocalPermanente() {
+    
     const input = document.createElement('input');
+    //cria o elemento input do tipo file (serve para abrir o seletor de arquivos)
     input.type = 'file';
-    input.accept = '.csv'; // Aceita apenas arquivos CSV
+    input.accept = '.csv'; // Aceita apenas arquivos CSV do sistema local
     input.onchange = function (event) {
-        const arquivo = event.target.files[0];
+        /*associa uma função de evento ao onchange, que será chamada quando o usuário selecionar um arquivo
+        O evento change é disparado quando um arquivo é selecionado*/
+        const arquivo = event.target.files[0]; //acessa o arquivo selecionado e armazena na variavel arquivo
         console.log(arquivo.name);
         if (arquivo) {
-            processarArquivo(arquivo);
+            converterDeCSVparaListaObjeto(arquivo);
         }
+        /*verifica se um arquivo foi selecionado: 
+        se sim, chama a função processarArquivo e passa o arquivo selecionado como argumento
+        permitindo que o arquivo seja lido e processado na função processarArquivo*/
     };
-    input.click(); // Simula o clique para abrir o seletor de arquivos
-
+    input.click(); //seletor de arquivos exibido automaticamente    
 }
 
+
 // Função para processar o arquivo CSV e transferir os dados para a listaEsmaltes
-function processarArquivo(arquivo) {
-    const leitor = new FileReader();
+function converterDeCSVparaListaObjeto(arquivo) {
+    const leitor = new FileReader();  //objeto que permite ler arquivos locais no navegador 
     leitor.onload = function (e) {
         const conteudo = e.target.result; // Conteúdo do arquivo CSV
         const linhas = conteudo.split('\n'); // Separa o conteúdo por linha
         listaEsmaltes = []; // Limpa a lista atual (se necessário)
         for (let i = 0; i < linhas.length; i++) {
-            const linha = linhas[i].trim();
-            if (linha) {
+            const linha = linhas[i].trim();  //linhas[i] representa cada linha do arquivo CSV
+            if (linha) { //verifica se a linha não está vazia
                 const dados = linha.split(';'); // Separa os dados por ';'
-                if (dados.length === 7) {
+                if (dados.length === 7) { //verifica os seis campos
                     // Adiciona os dados à listaEsmaltes como um objeto
-                    listaMusica.push({
-                        id: dados[0],
+                    listaEsmaltes.push({
+                        Id: dados[0],
                         marca: dados[1],
                         nome: dados[2],
                         cor: dados[3],
                         tipoDeEsmalte: dados[4],
                         dataValidade: dados[5],
                         quantasVezesUsado: dados[6]
+                
                     });
                 }
             }
         }
-        // console.log("Upload concluído!", listaEsmaltes); // Exibe no console a lista atualizada
-        listar();
+        listar(); //exibe a lista atualizada
     };
     leitor.readAsText(arquivo); // Lê o arquivo como texto
 }
+
+
+
 
 //backend (não interage com o html)
 function procurePorChavePrimaria(chave) {
@@ -333,30 +342,8 @@ function inserirDadosIniciais() {
     bloquearAtributos(true);
 }
 const crudEsmalte = [
-    { id: 1, marca: 'Risque', nome: 'Maça do Amor', cor: 'Vermelho Escuro', tipoDeEsmalte: 'Metálico',
+    { id: 0, marca: 'Risque', nome: 'Maça do Amor', cor: 'Vermelho Escuro', tipoDeEsmalte: 'Metálico',
         dataValidade: '11-12-2027', quantasVezesUsado: '9' },
    
 ];
 
-// Função para buscar linhas que contenham a palavra específica
-function buscarLinhaPorPalavra(palavra) {
-    const resultados = crudEsmalte.filter(item =>
-        Object.values(item).some(valor =>
-            typeof valor === 'string' && valor.toLowerCase().includes(palavra.toLowerCase())
-        )
-    );
-
-    if (resultados.length > 0) {
-        console.log('Resultados encontrados:', resultados);
-        alert('Resultados encontrados: ' + JSON.stringify(resultados, null, 2));
-    } else {
-        console.log('Nenhuma linha encontrada com a palavra especificada.');
-        alert('Nenhuma linha encontrada com a palavra especificada.');
-    }
-}
-
-// Função chamada ao clicar no botão
-function executarBusca() {
-    const palavra = document.getElementById('input-palavra').value;
-    buscarLinhaPorPalavra(palavra);
-}
